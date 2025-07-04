@@ -48,6 +48,7 @@ export default function ItemManagement({ onBack }: ItemManagementProps) {
   const units = ["pieces", "kg", "g", "lbs", "oz", "liters", "ml", "cups", "cans", "bottles", "packages"]
   const locations = ["Refrigerator", "Freezer", "Pantry", "Counter", "Cupboard", "Other"]
 
+  //Formula for calculating remark and discounted price for the item
   const applyDiscount=(dis: string, sell: string, purchase: string): {
     remark: string,
     discounted_price: string,
@@ -140,24 +141,25 @@ export default function ItemManagement({ onBack }: ItemManagementProps) {
     }
   }
 
-
+//Applying discount based on proximity to expiry
     const getDiscountAndRemark = (expiryDate: string, selling_price: string, discount1: string, discount2: string, purchasing_price: string): {
       remark: string,
       discounted_price: string,
-    } => 
-      {
-    const now = new Date()
-    const expiry = new Date(expiryDate)
-          const diffTime = expiry.getTime() - now.getTime()
-          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    } => {
+
+        const now = new Date()
+        const expiry = new Date(expiryDate)
+        const diffTime = expiry.getTime() - now.getTime()
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
       let res={      
         remark: "No discount applied",
-      discounted_price: selling_price,
-};
+        discounted_price: selling_price,
+      };
+
       if (diffDays === 1) {
         res=applyDiscount(discount1, selling_price, purchasing_price)
-    }
+      }
       if (diffDays === 2) {
         res=applyDiscount(discount2, selling_price, purchasing_price)
     }
