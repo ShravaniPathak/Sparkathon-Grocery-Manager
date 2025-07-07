@@ -286,7 +286,7 @@ export default function ItemRegistration({ onBack }: ItemRegistrationProps) {
 
               <div className="space-y-2">
                 <Label htmlFor="location">Walmart</Label>
-                <Select onValueChange={(value) => handleSelectChange("Walmart", value)}>
+                <Select onValueChange={(value) => handleSelectChange("walmart", value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select walmart" />
                   </SelectTrigger>

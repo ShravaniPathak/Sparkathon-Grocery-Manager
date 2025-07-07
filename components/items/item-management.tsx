@@ -47,6 +47,14 @@ export default function ItemManagement({ onBack }: ItemManagementProps) {
 
   const units = ["pieces", "kg", "g", "lbs", "oz", "liters", "ml", "cups", "cans", "bottles", "packages", "dozen"]
   const locations = ["Refrigerator", "Freezer", "Pantry", "Counter", "Cupboard", "Other"]
+  const walmarts = [
+      { name: "Walmart Downtown", address: "123 Main St, Springfield" },
+      { name: "Walmart Southside", address: "456 South St, Springfield" },
+      { name: "Walmart Eastview", address: "789 East Rd, Springfield" },
+      { name: "Walmart Westgate", address: "101 West Ave, Springfield" },
+      { name: "Walmart Northpark", address: "202 North Dr, Springfield" },
+      { name: "Walmart Midtown", address: "303 Central Blvd, Springfield" },
+  ];
 
   //Formula for calculating remark and discounted price for the item
   const applyDiscount=(dis: string, sell: string, purchase: string): {
@@ -308,6 +316,10 @@ export default function ItemManagement({ onBack }: ItemManagementProps) {
                     <span>{item.location || "Not specified"}</span>
                   </div>
                   <div className="flex justify-between">
+                    <span className="text-gray-600">Walmart:</span>
+                    <span>{item.walmart || "Not specified"}</span>
+                  </div>
+                  <div className="flex justify-between">
                     <span className="text-gray-600">Expiry:</span>
                     <span>{new Date(item.expiryDate).toLocaleDateString()}</span>
                   </div>
@@ -483,6 +495,24 @@ export default function ItemManagement({ onBack }: ItemManagementProps) {
                                 {locations.map((location) => (
                                   <SelectItem key={location} value={location}>
                                     {location}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Walmart</Label>
+                            <Select
+                              value={editingItem.walmart}
+                              onValueChange={(value) => setEditingItem({ ...editingItem, walmart: value })}
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {walmarts.map(({ name, address }) => (
+                                  <SelectItem key={address} value={address}>
+                                    {name} : {address}
                                   </SelectItem>
                                 ))}
                               </SelectContent>
