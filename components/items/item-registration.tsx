@@ -24,6 +24,7 @@ export default function ItemRegistration({ onBack }: ItemRegistrationProps) {
     purchaseDate: "",
     expiryDate: "",
     location: "",
+    walmart: "",
     notes: "",
     discount1 : "",
     discount2 : "",
@@ -48,6 +49,14 @@ export default function ItemRegistration({ onBack }: ItemRegistrationProps) {
   const units = ["pieces", "kg", "g", "lbs", "oz", "liters", "ml", "cups", "cans", "bottles", "packages", "dozen"]
 
   const locations = ["Refrigerator", "Freezer", "Pantry", "Counter", "Cupboard", "Other"]
+  const walmarts = [
+      { name: "Walmart Downtown", address: "123 Main St, Springfield" },
+      { name: "Walmart Southside", address: "456 South St, Springfield" },
+      { name: "Walmart Eastview", address: "789 East Rd, Springfield" },
+      { name: "Walmart Westgate", address: "101 West Ave, Springfield" },
+      { name: "Walmart Northpark", address: "202 North Dr, Springfield" },
+      { name: "Walmart Midtown", address: "303 Central Blvd, Springfield" },
+  ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -74,6 +83,7 @@ export default function ItemRegistration({ onBack }: ItemRegistrationProps) {
     purchaseDate: "",
     expiryDate: "",
     location: "",
+    walmart: "",
     notes: "",
     discount1 : "",
     discount2 : "",
@@ -268,6 +278,22 @@ export default function ItemRegistration({ onBack }: ItemRegistrationProps) {
                     {locations.map((location) => (
                       <SelectItem key={location} value={location}>
                         {location}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="location">Walmart</Label>
+                <Select onValueChange={(value) => handleSelectChange("Walmart", value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select walmart" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {walmarts.map(({ name, address }) => (
+                      <SelectItem key={address} value={address}>
+                        {name} : {address}
                       </SelectItem>
                     ))}
                   </SelectContent>
