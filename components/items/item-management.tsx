@@ -45,7 +45,7 @@ export default function ItemManagement({ onBack }: ItemManagementProps) {
     "Other",
   ]
 
-  const units = ["pieces", "kg", "g", "lbs", "oz", "liters", "ml", "cups", "cans", "bottles", "packages"]
+  const units = ["pieces", "kg", "g", "lbs", "oz", "liters", "ml", "cups", "cans", "bottles", "packages", "dozen"]
   const locations = ["Refrigerator", "Freezer", "Pantry", "Counter", "Cupboard", "Other"]
 
   //Formula for calculating remark and discounted price for the item
@@ -318,7 +318,7 @@ export default function ItemManagement({ onBack }: ItemManagementProps) {
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Discounted Price:</span>
+                    <span className="text-gray-600">Discount Status:</span>
                   <span
                     className={`font-medium ${
                       getDiscountAndRemark(item.expiryDate, item.selling_price, item.discount1, item.discount2, item.purchasing_price).remark === "Discounted price less than original price"
@@ -332,7 +332,7 @@ export default function ItemManagement({ onBack }: ItemManagementProps) {
                   </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Status:</span>
+                    <span className="text-gray-600">Expiry Status:</span>
                     <span
                       className={`font-medium ${
                         getExpiryStatus(item.expiryDate) === "expired"
