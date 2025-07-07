@@ -17,6 +17,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
     expiringSoon: 0,
     expired: 0,
     fresh: 0,
+    outOfStock: 0,
   })
 
   useEffect(() => {
@@ -41,11 +42,15 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
       return expiryDate > threeDaysFromNow
     }).length
 
+    const outOfStock = groceryItems.filter(
+        (item: any) => item.quantity === 0).length
+
     setStats({
       total: groceryItems.length,
       expiringSoon,
       expired,
       fresh,
+      outOfStock,
     })
   }, [])
 
@@ -178,9 +183,9 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
         </Card>
       </div>
 
-      {/* Alerts */}
+      {/* Expiry alert */}
       {(stats.expired > 0 || stats.expiringSoon > 0) && (
-        <Card className="border-yellow-200 bg-yellow-50">
+        <Card className="border-yellow-200 bg-yellow-50 mb-8">
           <CardHeader>
             <CardTitle className="flex items-center text-yellow-800">
               <AlertTriangle className="h-5 w-5 mr-2" />
@@ -197,6 +202,30 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               {stats.expiringSoon > 0 && (
                 <p className="text-yellow-700">
                   {stats.expiringSoon} item{stats.expiringSoon > 1 ? "s" : ""} will expire within 3 days.
+                </p>
+              )}
+            </div>
+            <Button onClick={() => onNavigate("manage-items")} className="mt-4 bg-yellow-600 hover:bg-yellow-700">
+              Review Items
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Stock alert */}
+      {(stats.outOfStock > 0) && (
+        <Card className="border-yellow-200 bg-yellow-50">
+          <CardHeader>
+            <CardTitle className="flex items-center text-yellow-800">
+              <AlertTriangle className="h-5 w-5 mr-2" />
+              Attention Required
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {stats.outOfStock > 0 && (
+                <p className="text-yellow-700">
+                  You have {stats.outOfStock} item{stats.outOfStock > 1 ? "s" : ""} out of stock.
                 </p>
               )}
             </div>
