@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ArrowLeft, Search, Edit, Trash2, Package, Filter } from "lucide-react"
+import { ArrowLeft, Search, Edit, SendToBack, Trash2, Package, Filter } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -96,6 +96,16 @@ export default function ItemManagement({ onBack }: ItemManagementProps) {
   const loadItems = () => {
     const groceryItems = JSON.parse(localStorage.getItem("groceryItems") || "[]")
     setItems(groceryItems)
+  }
+
+  const getQuantityAtWalmart = (itemName: string, walmart: string) => {
+      const item = items.find(
+          item => item.name === itemName && item.walmart === walmart)
+      if (item) {
+          return item.quantity
+      } else {
+          return 0
+      }
   }
 
   const filterItems = () => {
@@ -205,6 +215,25 @@ export default function ItemManagement({ onBack }: ItemManagementProps) {
   const handleEditSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     updateItem(editingItem)
+  }
+
+  const placeOrder = (
+      item: string, quantity: number, from: string, to: string) => {
+    const order = { item, quantity, from, to }
+    const orders = JSON.parse(localStorage.getItem("orders") || "[]")
+    orders.push(order)
+    localStorage.setItem("orders", JSON.stringify(orders))
+  }
+  console.log(JSON.parse(localStorage.getItem("orders")))
+
+  const handleStockRequestSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    placeOrder(
+        editingItem.name,
+        editingItem.quantity,
+        editingItem.orderFromWalmart,
+        editingItem.walmart)
+    setEditingItem(null)
   }
 
   return (
@@ -544,6 +573,118 @@ export default function ItemManagement({ onBack }: ItemManagementProps) {
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
+                {item.quantity === 0 && (
+                    <div className="flex gap-2 mt-4">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex-1"
+                            onClick={() => setEditingItem({ ...item })}
+                          >
+                            <SendToBack className="h-4 w-4 mr-1" />
+                            Request
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-md">
+                          <DialogHeader>
+                            <DialogTitle>{item.name}</DialogTitle>
+                            <DialogDescription>Select walmart to request stock from</DialogDescription>
+                          </DialogHeader>
+                          {editingItem && (
+                            <form onSubmit={handleStockRequestSubmit} className="space-y-4">
+                              <div className="space-y-2">
+                                <Label>Item Name</Label>
+                                <Input
+                                  value={editingItem.name}
+                                  onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })}
+                                  disabled
+                                  required
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label>Walmart</Label>
+                                <Select
+                                  value={editingItem.orderFromWalmart || editingItem.walmart}
+                                  onValueChange={(value) => setEditingItem({ ...editingItem, orderFromWalmart: value })}
+                                >
+                                  <SelectTrigger>
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {walmarts.map(({ name, address }) => (
+                                      <SelectItem key={address} value={address}>
+                                        {name} : {address}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              <div className="space-y-2">
+                                <Label>Quantity Available at {editingItem.walmart}</Label>
+                                <Input
+                                  type="number"
+                                  step="0.1"
+                                  value={getQuantityAtWalmart(editingItem.name, editingItem.orderFromWalmart || editingItem.walmart)}
+                                  onChange={(e) =>
+                                    setEditingItem({ ...editingItem, quantity: Number.parseFloat(e.target.value) })
+                                  }
+                                  disabled
+                                  required
+                                />
+                              </div>
+                              <div className="grid grid-cols-2 gap-2">
+                                <div className="space-y-2">
+                                  <Label>Quantity</Label>
+                                  <Input
+                                    type="number"
+                                    step="0.1"
+                                    value={editingItem.quantity}
+                                    onChange={(e) =>
+                                      setEditingItem({ ...editingItem, quantity: Number.parseFloat(e.target.value) })
+                                    }
+                                    required
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label>Unit</Label>
+                                  <Select
+                                    value={editingItem.unit}
+                                    onValueChange={(value) => setEditingItem({ ...editingItem, unit: value })}
+                                  >
+                                    <SelectTrigger>
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {units.map((unit) => (
+                                        <SelectItem key={unit} value={unit}>
+                                          {unit}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <Label>Notes</Label>
+                                <Textarea
+                                  value={editingItem.notes}
+                                  onChange={(e) => setEditingItem({ ...editingItem, notes: e.target.value })}
+                                  rows={2}
+                                />
+                              </div>
+                              <div className="flex gap-2">
+                                <Button type="submit" className="flex-1 bg-green-600 hover:bg-green-700">
+                                  Place request
+                                </Button>
+                              </div>
+                            </form>
+                          )}
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                )}
               </CardContent>
             </Card>
           ))}
