@@ -6,6 +6,7 @@ import RegisterPage from "@/components/auth/register-page"
 import Dashboard from "@/components/dashboard/dashboard"
 import ItemRegistration from "@/components/items/item-registration"
 import ItemManagement from "@/components/items/item-management"
+import OrderManagement from "@/components/orders/order-management"
 import ProfilePage from "@/components/profile/profile-page"
 import Navigation from "@/components/layout/navigation"
 
@@ -56,6 +57,8 @@ export default function HomePage() {
         return <ItemManagement onBack={() => setCurrentPage("dashboard")} />
       case "profile":
         return <ProfilePage user={currentUser} onBack={() => setCurrentPage("dashboard")} />
+      case "manage-orders":
+        return <OrderManagement onBack={() => setCurrentPage("dashboard")} />
       default:
         return <Dashboard onNavigate={setCurrentPage} />
     }

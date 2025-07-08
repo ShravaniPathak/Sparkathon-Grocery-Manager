@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { ShoppingCart, Home, Plus, List, User, LogOut, Menu } from "lucide-react"
+import { ShoppingCart, Home, Plus, List, User, LogOut, Menu, SendToBack } from "lucide-react"
 
 interface NavigationProps {
   currentPage: string
@@ -16,6 +16,7 @@ export default function Navigation({ currentPage, onNavigate, onLogout, user }: 
     { id: "dashboard", label: "Dashboard", icon: Home },
     { id: "add-item", label: "Add Item", icon: Plus },
     { id: "manage-items", label: "Manage Items", icon: List },
+    { id: "manage-orders", label: "Manage Orders", icon: SendToBack },
   ]
 
   return (
